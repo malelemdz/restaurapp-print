@@ -51,7 +51,7 @@ jobs:
         working-directory: ./app
 
       - name: Build macOS Release
-        run: flutter build macos --release --no-codesign
+        run: flutter build macos --release
         working-directory: ./app
 
       - name: Archive Release
