@@ -25,15 +25,15 @@ jobs:
         run: flutter pub get
         working-directory: ./app
 
-      - name: Build Windows MSIX
-        run: flutter pub run msix:create --install-certificate false
+      - name: Build Windows Release
+        run: flutter build windows --release
         working-directory: ./app
 
       - name: Archive Release
         uses: actions/upload-artifact@v4
         with:
           name: restaurapp-print-windows
-          path: app/build/windows/x64/runner/Release/*.msix
+          path: app/build/windows/x64/runner/Release
 
   build-macos:
     name: Build macOS

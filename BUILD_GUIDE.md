@@ -51,14 +51,11 @@ No se puede compilar para Windows desde macOS directamente. Usaremos **GitHub Ac
     *   Baja a la sección **"Artifacts"**.
     *   Descarga el archivo `restaurapp-print-windows.zip`.
 
-4.  **Instalación en Windows (MSIX):**
-    *   Descomprime el ZIP.
-    *   Encontrarás un único archivo: `restaurapp_print.msix`.
-    *   **Ventajas:** 
-        *   Es un archivo único (como un .exe instalable).
-        *   Se instala limpiamente en el sistema.
-        *   **Listo para la Microsoft Store:** Este es el formato exacto que pide Microsoft si decides subirlo a la tienda.
-    *   **Nota:** Al instalarlo sin subir a la tienda (sideloading), Windows pedirá habilitar la instalación de fuentes desconocidas o confiar en el certificado de prueba.
+4.  **Instalación en Windows (ZIP):**
+    *   Descomprime el ZIP descargado.
+    *   Verás una carpeta con el archivo `restaurapp_print.exe` y otras carpetas (`data`, etc).
+    *   **Importante:** Debes mantener todos esos archivos juntos. Puedes crear un acceso directo al .exe en el escritorio del usuario.
+    *   **Nota:** Al abrirlo, Windows dirá "Protegió su PC". El usuario debe dar clic en **"Más información" -> "Ejecutar de todas formas"**.
 
 ---
 
