@@ -8,6 +8,15 @@ import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Fix for Windows "Start on Boot": Ensure app runs from its own directory
+  // otherwise it crashes because it can't find assets when launched by System.
+  if (Platform.isWindows) {
+    String executablePath = Platform.resolvedExecutable;
+    String executableDir = File(executablePath).parent.path;
+    Directory.current = executableDir;
+  }
+
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(

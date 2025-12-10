@@ -38,7 +38,7 @@ class PdfGeneratorService {
               ),
               child: pw.DefaultTextStyle(
                 style: pw.TextStyle(
-                  color: PdfColors.blue, 
+                  color: PdfColors.black, 
                   fontSize: 12,
                   font: ttfRegular,
                 ),
