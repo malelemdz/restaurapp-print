@@ -1,0 +1,57 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on version tags (e.g., v1.0.0)
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - name: Enable Windows support
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows MSIX
+        run: flutter pub run msix:create
+
+      - name: Archive Release
+        uses: actions/upload-artifact@v3
+        with:
+          name: restaurapp-print-windows
+          path: build/windows/x64/runner/Release/*.msix
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build macOS Release
+        run: flutter build macos --release --no-codesign
+
+      - name: Archive Release
+        uses: actions/upload-artifact@v3
+        with:
+          name: restaurapp-print-macos
+          path: build/macos/Build/Products/Release/RestaurApp Print.app

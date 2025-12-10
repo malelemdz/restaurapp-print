@@ -1,0 +1,32 @@
+# System
+.DS_Store
+Thumbs.db
+
+# Build Artifacts
+build/
+.dart_tool/
+bin/
+obj/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Generated Installers (Do not upload large binaries)
+*.dmg
+*.exe
+*.zip
+*.msi
+*.pkg
+
+# Flutter specific (redundant if app/.gitignore exists but good for safety)
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Reference Folders (Process references, not part of the app)
+backend/
+docs/
+fonts/
+images/
+ticket_html/
