@@ -25,9 +25,4 @@ obj/
 .flutter-plugins-dependencies
 
 # Reference Folders (Process references, not part of the app)
-# Reference Folders (Process references, not part of the app)
-/backend/
-/docs/
-/fonts/
-/images/
-/ticket_html/
+

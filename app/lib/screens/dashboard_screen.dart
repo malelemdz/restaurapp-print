@@ -86,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
 
   Future<void> _initTray() async {
     await trayManager.setIcon(
-      'assets/images/ico.png', 
+      Platform.isMacOS ? 'assets/images/ico-menubar.png' : 'assets/images/ico-windows.png', 
     );
     await trayManager.setToolTip('RestaurApp Print');
     await _updateTrayMenu();
@@ -247,7 +247,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
         title: Row(
           children: [
             Image.asset(
-              'assets/images/ico.png',
+              Platform.isMacOS ? 'assets/images/ico-title.png' : 'assets/images/ico-windows.png',
               height: 32,
               width: 32,
             ),
