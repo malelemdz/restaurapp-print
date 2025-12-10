@@ -23,15 +23,17 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
+        working-directory: ./app
 
       - name: Build Windows MSIX
         run: flutter pub run msix:create
+        working-directory: ./app
 
       - name: Archive Release
         uses: actions/upload-artifact@v3
         with:
           name: restaurapp-print-windows
-          path: build/windows/x64/runner/Release/*.msix
+          path: app/build/windows/x64/runner/Release/*.msix
 
   build-macos:
     name: Build macOS
@@ -46,12 +48,14 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
+        working-directory: ./app
 
       - name: Build macOS Release
         run: flutter build macos --release --no-codesign
+        working-directory: ./app
 
       - name: Archive Release
         uses: actions/upload-artifact@v3
         with:
           name: restaurapp-print-macos
-          path: build/macos/Build/Products/Release/RestaurApp Print.app
+          path: app/build/macos/Build/Products/Release/RestaurApp Print.app
