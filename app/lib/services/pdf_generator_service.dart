@@ -176,27 +176,36 @@ class PdfGeneratorService {
         
         // SECCION NOTAS GENERALES
         // SECCION: METODO DE PAGO (NUEVA)
-        if (data['metodo_pago'] != null && data['metodo_pago'].toString().isNotEmpty) ...[
-           // SEPARATOR: TOTALS -> PAYMENT
-           pw.SizedBox(height: kPaddingSection),
-           pw.Divider(borderStyle: pw.BorderStyle.dashed, height: kDividerHeight),
-           pw.SizedBox(height: kPaddingSection),
-           
-           pw.Text("Metodo de Pago:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-           // Payment Method Row
-           _buildTotalRow(
-             data['metodo_pago'].toString().toUpperCase(), 
-             data['total'] ?? '', 
-             fontSize: 12
-           ),
-           
-           // Optional: Monto Recibido
-           if (data['monto_recibido'] != null && data['monto_recibido'].toString().isNotEmpty)
-             _buildTotalRow('Monto recibido', data['monto_recibido'].toString()),
-             
-           // Optional: Vuelto
-           if (data['vuelto'] != null && data['vuelto'].toString().isNotEmpty)
-             _buildTotalRow('Vuelto', data['vuelto'].toString()),
+        // SECCION: METODO DE PAGO (NUEVA logic with nested 'pagos')
+        if (data['pagos'] != null && data['pagos'] is Map) ...[
+            final pagos = data['pagos'];
+            final metodo = pagos['metodo_pago_display'] ?? pagos['metodo_pago'];
+            
+            if (metodo != null && metodo.toString().isNotEmpty) ...[
+               // SEPARATOR: TOTALS -> PAYMENT
+               pw.SizedBox(height: kPaddingSection),
+               pw.Divider(borderStyle: pw.BorderStyle.dashed, height: kDividerHeight),
+               pw.SizedBox(height: kPaddingSection),
+               
+               pw.Text("Metodo de Pago:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+               // Payment Method Row
+               _buildTotalRow(
+                 metodo.toString().toUpperCase(), 
+                 data['total'] ?? '', 
+                 fontSize: 12
+               ),
+               
+               // Optional: Monto Recibido
+               if (pagos['monto_recibido_display'] != null && pagos['monto_recibido_display'].toString().isNotEmpty) {
+                 // Check if it's not effectively zero if needed, but display usually implies relevance
+                 _buildTotalRow('Monto recibido', pagos['monto_recibido_display'].toString());
+               }
+
+               // Optional: Vuelto
+               if (pagos['vuelto_display'] != null && pagos['vuelto_display'].toString().isNotEmpty) {
+                  _buildTotalRow('Vuelto', pagos['vuelto_display'].toString());
+               }
+            ]
         ],
 
         // SECCION NOTAS GENERALES
