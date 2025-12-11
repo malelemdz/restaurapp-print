@@ -288,7 +288,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10), // Reduced from 16
+            const SizedBox(height: 15), // Increased from 10 to separate title from input
 
             // Row 2: Input and Action Icon
             Row(
@@ -360,11 +360,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
         Expanded(child: Text(label, style: const TextStyle(fontSize: 12))),
         SizedBox(
           height: 24, // Force compact height
-          child: Switch(
-            value: value, 
-            onChanged: onChanged,
-            activeColor: AppTheme.primaryOrange,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // Remove extra padding
+          child: Transform.scale(
+            scale: 0.7, // Make switch look thinner/smaller
+            child: Switch(
+              value: value, 
+              onChanged: onChanged,
+              activeColor: AppTheme.primaryOrange,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
           ),
         )
       ],
