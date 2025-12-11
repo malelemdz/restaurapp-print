@@ -26,6 +26,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   // System Settings
   bool _startOnBoot = false;
   bool _minimizeToTray = false;
+  bool _autoStartService = true; // Default true per user preference for smart behavior
 
   @override
   void initState() {
@@ -60,6 +61,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
           // Load System Settings
           _minimizeToTray = prefs.getBool('minimize_to_tray') ?? false;
+          _autoStartService = prefs.getBool('auto_start_service') ?? true;
           // Hybrid approach: Load pref, fallback to system check if pref missing
           _startOnBoot = prefs.getBool('start_on_boot') ?? isEnabled;
         });
@@ -150,6 +152,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
     // Save System Settings
     await prefs.setBool('minimize_to_tray', _minimizeToTray);
+    await prefs.setBool('auto_start_service', _autoStartService);
     await prefs.setBool('start_on_boot', _startOnBoot);
     
     // Configure Launch at Startup
@@ -378,6 +381,15 @@ class _ConfigScreenState extends State<ConfigScreen> {
               ],
             ),
             const SizedBox(height: 6),
+            SwitchListTile(
+              title: const Text('Iniciar servicio automáticamente al abrir', style: TextStyle(fontSize: 13)),
+              value: _autoStartService,
+              onChanged: (val) => setState(() => _autoStartService = val),
+              dense: true,
+              visualDensity: VisualDensity.compact,
+              contentPadding: EdgeInsets.zero,
+              activeColor: AppTheme.primaryOrange,
+            ),
             SwitchListTile(
               title: const Text('Iniciar al arrancar el sistema', style: TextStyle(fontSize: 13)),
               value: _startOnBoot,

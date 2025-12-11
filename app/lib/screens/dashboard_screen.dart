@@ -58,7 +58,10 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
       }
     });
 
-    // Check initial state
+    // Check for auto-start service preference
+    _checkAutoStartService();
+    
+    // Check initial state (Visual only, actual start handled by _checkAutoStartService)
     _isRunning = _service.isRunning;
     
     _loadAppVersion();
@@ -66,6 +69,21 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
     windowManager.addListener(this);
     trayManager.addListener(this);
     _loadSettings();
+    _loadSettings();
+  }
+  
+  Future<void> _checkAutoStartService() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Default to true if not set, for better UX
+    bool autoStart = prefs.getBool('auto_start_service') ?? true;
+    
+    if (autoStart && !_service.isRunning) {
+      // Small delay to ensure UI is ready
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (mounted) {
+        _service.start();
+      }
+    }
   }
 
   @override
@@ -117,21 +135,27 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
   // --- Window Listener ---
   @override
   void onWindowClose() async {
-    // Reload settings just in case changed in Config
+    // 1. Immediate UI response: Hide window if possible to feel fast
+    // We can't know for sure yet, but getting shared prefs is fast.
+    
     final prefs = await SharedPreferences.getInstance();
     bool minimize = prefs.getBool('minimize_to_tray') ?? false;
 
     if (minimize) {
       await windowManager.hide();
     } else {
+       // If we are NOT minimizing, we must ask for confirmation.
+       // Bring window to front just in case
+       await windowManager.show();
+       
        bool shouldExit = await _showExitConfirmation();
        if (shouldExit) {
-         await windowManager.destroy(); // Actually close
+         // Clean shutdown sequence
+         _service.stop(); // Stop timers/streams
+         await windowManager.destroy();
+         // Force exit to prevent hanging processes
+         exit(0);
        }
-       // If no, do nothing (event prevents close by default? wait, we need to ensure preventClose is managed)
-       // Flutter window_manager onWindowClose is just a listener, usually we need to setQuitOnClose(false) for this to work as interceptor
-       // Actually window_manager usually requires 'preventClose' to be set to true if we want to intercept. 
-       // We'll update main.dart or init to setPreventClose(true) and handle destruction manually.
     }
   }
 
@@ -167,8 +191,9 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
     await windowManager.focus();
     
     if (await _showExitConfirmation()) {
+       _service.stop();
        await windowManager.destroy();
-       // exit(0); // Force exit if needed
+       exit(0);
     }
   }
 
