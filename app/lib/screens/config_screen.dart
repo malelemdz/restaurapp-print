@@ -269,10 +269,10 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ) 
           : null,
       child: Padding(
-        padding: const EdgeInsets.all(12.0), // Reduced from 16
+        padding: const EdgeInsets.all(16.0), // Standardized to 16 to match other sections
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: [ // ...
             // Row 1: Icon and Title
             Row(
               children: [
@@ -288,7 +288,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 15), // Increased from 10 to separate title from input
+            const SizedBox(height: 20), // Increased to 20 for better separation
 
             // Row 2: Input and Action Icon
             Row(
