@@ -337,14 +337,15 @@ class _ConfigScreenState extends State<ConfigScreen> {
               ],
             ),
             
-            const SizedBox(height: 6), // Reduced from 8
+            const SizedBox(height: 12), // Increased from 6
 
             // Row 3: Helper Text
             Text(
-              'Solo ingresar el dominio, sin https:// ni rutas',
+              'Ingresa solo el dominio, sin https:// ni rutas adicionales.\nEjemplo: midominio.com',
               style: TextStyle(
-                fontSize: 10, // Smaller hint
+                fontSize: 11, // Increased slightly for readability
                 color: Theme.of(context).textTheme.bodySmall?.color,
+                height: 1.3,
               ),
             ),
           ],
