@@ -102,7 +102,7 @@ class PdfGeneratorService {
         pw.SizedBox(height: kPaddingSection),
 
         // Info
-        _buildInfoRow('Fecha: ${_getCurrentDate()}', 'Hora Impresión: ${_getCurrentTime()}'),
+        _buildInfoRow('Fecha: ${_getCurrentDate()}', 'Hora: ${_getCurrentTime()}'),
         _buildInfoRow('Recibo No:', data['recibo_no'] ?? ''),
         _buildInfoRow('Servicio:', data['servicio'] ?? 'General'),
         _buildInfoRow('Cliente:', data['cliente'] ?? 'Cliente General'),
@@ -175,14 +175,39 @@ class PdfGeneratorService {
            _buildTotalRow('TOTAL', data['total'], isBold: true, fontSize: 16),
         
         // SECCION NOTAS GENERALES
-        if (data['notas'] != null && data['notas'].toString().isNotEmpty) ...[
-           // SEPARATOR: TOTALS -> NOTES
+        // SECCION: METODO DE PAGO (NUEVA)
+        if (data['metodo_pago'] != null && data['metodo_pago'].toString().isNotEmpty) ...[
+           // SEPARATOR: TOTALS -> PAYMENT
            pw.SizedBox(height: kPaddingSection),
            pw.Divider(borderStyle: pw.BorderStyle.dashed, height: kDividerHeight),
            pw.SizedBox(height: kPaddingSection),
            
-           pw.Text("Notas:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-           pw.Text(data['notas']),
+           pw.Text("Metodo de Pago:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+           // Payment Method Row
+           _buildTotalRow(
+             data['metodo_pago'].toString().toUpperCase(), 
+             data['total'] ?? '', 
+             fontSize: 12
+           ),
+           
+           // Optional: Monto Recibido
+           if (data['monto_recibido'] != null && data['monto_recibido'].toString().isNotEmpty)
+             _buildTotalRow('Monto recibido', data['monto_recibido'].toString()),
+             
+           // Optional: Vuelto
+           if (data['vuelto'] != null && data['vuelto'].toString().isNotEmpty)
+             _buildTotalRow('Vuelto', data['vuelto'].toString()),
+        ],
+
+        // SECCION NOTAS GENERALES
+        if (data['notas'] != null && data['notas'].toString().isNotEmpty) ...[
+           // SEPARATOR: PAYMENT -> NOTES
+           pw.SizedBox(height: kPaddingSection),
+           pw.Divider(borderStyle: pw.BorderStyle.dashed, height: kDividerHeight),
+           pw.SizedBox(height: kPaddingSection),
+           
+           pw.Center(child: pw.Text("NOTAS DEL PEDIDO", style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+           pw.Center(child: pw.Text(data['notas'], textAlign: pw.TextAlign.center)),
         ],
 
         // SEPARATOR: NOTES/TOTALS -> FOOTER
