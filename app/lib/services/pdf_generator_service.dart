@@ -28,8 +28,7 @@ class PdfGeneratorService {
       // Build PDF content based on type
       pdf.addPage(
         pw.Page(
-          pageFormat: PdfPageFormat.roll80,
-          margin: const pw.EdgeInsets.all(16), 
+          pageFormat: PdfPageFormat(72 * PdfPageFormat.mm, double.infinity, marginAll: 0),
           build: (pw.Context context) {
             return pw.Theme(
               data: pw.ThemeData.withFont(
@@ -39,10 +38,13 @@ class PdfGeneratorService {
               child: pw.DefaultTextStyle(
                 style: pw.TextStyle(
                   color: PdfColors.black, 
-                  fontSize: 12,
+                  fontSize: 10,
                   font: ttfRegular,
                 ),
-                child: _buildContent(job, ttfRegular, ttfBold),
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 2), // Tiny internal margin
+                  child: _buildContent(job, ttfRegular, ttfBold),
+                ),
               ),
             );
           },
@@ -84,14 +86,14 @@ class PdfGeneratorService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         // Header
-        pw.Center(child: pw.Text('SUSHI & PIZZA', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text('SUSHI & PIZZA', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold))),
         pw.SizedBox(height: 5),
-        pw.Center(child: pw.Text('Amazona Sushi Nikkei', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold))),
-        pw.Center(child: pw.Text('+56 9 2607 5590', style: const pw.TextStyle(fontSize: 10))),
-        pw.Center(child: pw.Text('Pizzería Raúl Bravo', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold))),
-        pw.Center(child: pw.Text('+56 9 4192 4833', style: const pw.TextStyle(fontSize: 10))),
+        pw.Center(child: pw.Text('Amazona Sushi Nikkei', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text('+56 9 2607 5590', style: const pw.TextStyle(fontSize: 9))),
+        pw.Center(child: pw.Text('Pizzería Raúl Bravo', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text('+56 9 4192 4833', style: const pw.TextStyle(fontSize: 9))),
         pw.SizedBox(height: 5),
-        pw.Center(child: pw.Text('Juan Martínez 1898, Iquique Chile', style: const pw.TextStyle(fontSize: 12))),
+        pw.Center(child: pw.Text('Juan Martínez 1898, Iquique Chile', style: const pw.TextStyle(fontSize: 10))),
         pw.SizedBox(height: 2), // Extra padding for header as requested
         
         // SEPARATOR: HEADER -> INFO
@@ -330,12 +332,12 @@ class PdfGeneratorService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         // Header
-        pw.Center(child: pw.Text(title, style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text(title, style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold))),
         pw.SizedBox(height: 5), // Reducido de 20 a 5
 
-        pw.Center(child: pw.Text('PEDIDO #$pedidoNum - ${data['servicio'] ?? ''}', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold))),
-        pw.Center(child: pw.Text('Cliente: ${data['cliente'] ?? ''}', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold))),
-        pw.Center(child: pw.Text('Hora Impresión: ${_getCurrentTime()}', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text('PEDIDO #$pedidoNum - ${data['servicio'] ?? ''}', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text('Cliente: ${data['cliente'] ?? ''}', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold))),
+        pw.Center(child: pw.Text('Hora Impresión: ${_getCurrentTime()}', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold))),
         
         pw.Padding(
           padding: const pw.EdgeInsets.only(top: kPaddingLine),

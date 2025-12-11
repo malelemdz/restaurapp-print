@@ -360,7 +360,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WindowListener, 
 
                       if (log.contains('Error')) {
                         color = isDark ? const Color(0xFFFF8A80) : Colors.red[800]!;
-                      } else if (log.contains('completado')) {
+                      } else if (log.contains('completado') || log.contains('completada')) {
                          color = isDark ? const Color(0xFF69F0AE) : Colors.green[800]!;
                       } else if (log.toLowerCase().contains('procesando') || 
                                  log.toLowerCase().contains('esperando') || 
