@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter/services.dart'; // For exit
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, exit;
 import '../services/print_service.dart';
 import '../theme/app_theme.dart';
 import 'config_screen.dart';
