@@ -269,7 +269,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ) 
           : null,
       child: Padding(
-        padding: const EdgeInsets.all(16.0), // Comfortable card padding
+        padding: const EdgeInsets.all(12.0), // Reduced from 16
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -281,14 +281,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 Text(
                   'Conectividad',
                   style: TextStyle(
-                    fontSize: 14, // Compact header
+                    fontSize: 13, // Compact header
                     fontWeight: FontWeight.bold, 
                     color: Theme.of(context).textTheme.titleLarge?.color
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16), // Good spacing between header and input
+            const SizedBox(height: 10), // Reduced from 16
 
             // Row 2: Input and Action Icon
             Row(
@@ -302,16 +302,19 @@ class _ConfigScreenState extends State<ConfigScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Dominio del Servidor',
                       hintText: 'ej: restaurapp.malelemdz.com',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16), // Thicker Input
-                      // removed isDense to allow standard comfortable height
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12), // Thinner Input
+                        isDense: true,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0), // Align with standard input height
-                  child: IconButton(
-                    onPressed: () {
+                  const SizedBox(width: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0.0), // Align with standard input height
+                    child: IconButton(
+                      iconSize: 20,
+                      constraints: const BoxConstraints(), // Compact button
+                      padding: const EdgeInsets.all(8),
+                      onPressed: () {
                       if (!_isDomainLocked) {
                         // Locking: Sanitize input
                          String cleanDomain = _domainController.text.trim()
@@ -334,19 +337,37 @@ class _ConfigScreenState extends State<ConfigScreen> {
               ],
             ),
             
-            const SizedBox(height: 8),
+            const SizedBox(height: 6), // Reduced from 8
 
             // Row 3: Helper Text
             Text(
               'Solo ingresar el dominio, sin https:// ni rutas',
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 10, // Smaller hint
                 color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCompactSwitch(String label, bool value, Function(bool) onChanged) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: Text(label, style: const TextStyle(fontSize: 12))),
+        SizedBox(
+          height: 24, // Force compact height
+          child: Switch(
+            value: value, 
+            onChanged: onChanged,
+            activeColor: AppTheme.primaryOrange,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // Remove extra padding
+          ),
+        )
+      ],
     );
   }
 
@@ -381,45 +402,25 @@ class _ConfigScreenState extends State<ConfigScreen> {
               ],
             ),
             const SizedBox(height: 6),
-            SwitchListTile(
-              title: const Text('Iniciar servicio al abrir', style: TextStyle(fontSize: 13)),
-              value: _autoStartService,
-              onChanged: (val) => setState(() => _autoStartService = val),
-              dense: true,
-              visualDensity: VisualDensity.compact,
-              contentPadding: EdgeInsets.zero,
-              activeColor: AppTheme.primaryOrange,
-            ),
-            SwitchListTile(
-              title: const Text('Iniciar al arrancar el sistema', style: TextStyle(fontSize: 13)),
-              value: _startOnBoot,
-              onChanged: (val) {
-                if (Platform.isMacOS) {
-                  _showMacOsAutoStartDialog(val);
+            const SizedBox(height: 10), // Reduced from 6 + SwitchListTile padding
+            
+            // Custom Compact Switch Rows
+            _buildCompactSwitch('Iniciar servicio al abrir', _autoStartService, (v) => setState(() => _autoStartService = v)),
+            const SizedBox(height: 8),
+            _buildCompactSwitch('Iniciar al arrancar sistema', _startOnBoot, (v) {
+                 if (Platform.isMacOS) {
+                  _showMacOsAutoStartDialog(v);
                 } else {
-                  setState(() => _startOnBoot = val);
+                  setState(() => _startOnBoot = v);
                 }
-              },
-              dense: true,
-              visualDensity: VisualDensity.compact,
-              contentPadding: EdgeInsets.zero,
-              activeColor: AppTheme.primaryOrange,
-            ),
-            SwitchListTile(
-              title: const Text('Minimizar a la bandeja al cerrar', style: TextStyle(fontSize: 13)),
-              value: _minimizeToTray,
-              onChanged: (val) => setState(() => _minimizeToTray = val),
-              dense: true,
-              visualDensity: VisualDensity.compact,
-              contentPadding: EdgeInsets.zero,
-              activeColor: AppTheme.primaryOrange,
-            ),
+            }),
+            const SizedBox(height: 8),
+            _buildCompactSwitch('Minimizar a bandeja al cerrar', _minimizeToTray, (v) => setState(() => _minimizeToTray = v)),
           ],
         ),
       ),
     );
   }
-
 
   Widget _buildPrintersSection() {
     final isLight = Theme.of(context).brightness == Brightness.light;
@@ -528,10 +529,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
         const SizedBox(height: 2),
         LayoutBuilder(
           builder: (context, constraints) {
-            return DropdownMenu<Printer?>(
-              initialSelection: safeValue,
-              width: constraints.maxWidth,
-              requestFocusOnTap: false,
+              return DropdownMenu<Printer?>(
+                initialSelection: safeValue,
+                width: constraints.maxWidth,
+                menuHeight: 200, // Constraint height to avoid overflow
+                requestFocusOnTap: false,
               enableFilter: false,
               textStyle: TextStyle(
                  color: Theme.of(context).textTheme.bodyLarge?.color,
