@@ -382,7 +382,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ),
             const SizedBox(height: 6),
             SwitchListTile(
-              title: const Text('Iniciar servicio automáticamente al abrir', style: TextStyle(fontSize: 13)),
+              title: const Text('Iniciar servicio al abrir', style: TextStyle(fontSize: 13)),
               value: _autoStartService,
               onChanged: (val) => setState(() => _autoStartService = val),
               dense: true,
