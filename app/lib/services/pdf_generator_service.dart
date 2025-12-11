@@ -177,36 +177,7 @@ class PdfGeneratorService {
         // SECCION NOTAS GENERALES
         // SECCION: METODO DE PAGO (NUEVA)
         // SECCION: METODO DE PAGO (NUEVA logic with nested 'pagos')
-        if (data['pagos'] != null && data['pagos'] is Map) ...[
-            final pagos = data['pagos'];
-            final metodo = pagos['metodo_pago_display'] ?? pagos['metodo_pago'];
-            
-            if (metodo != null && metodo.toString().isNotEmpty) ...[
-               // SEPARATOR: TOTALS -> PAYMENT
-               pw.SizedBox(height: kPaddingSection),
-               pw.Divider(borderStyle: pw.BorderStyle.dashed, height: kDividerHeight),
-               pw.SizedBox(height: kPaddingSection),
-               
-               pw.Text("Metodo de Pago:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-               // Payment Method Row
-               _buildTotalRow(
-                 metodo.toString().toUpperCase(), 
-                 data['total'] ?? '', 
-                 fontSize: 12
-               ),
-               
-               // Optional: Monto Recibido
-               if (pagos['monto_recibido_display'] != null && pagos['monto_recibido_display'].toString().isNotEmpty) {
-                 // Check if it's not effectively zero if needed, but display usually implies relevance
-                 _buildTotalRow('Monto recibido', pagos['monto_recibido_display'].toString());
-               }
-
-               // Optional: Vuelto
-               if (pagos['vuelto_display'] != null && pagos['vuelto_display'].toString().isNotEmpty) {
-                  _buildTotalRow('Vuelto', pagos['vuelto_display'].toString());
-               }
-            ]
-        ],
+        _buildPaymentSection(data),
 
         // SECCION NOTAS GENERALES
         if (data['notas'] != null && data['notas'].toString().isNotEmpty) ...[
@@ -338,6 +309,45 @@ class PdfGeneratorService {
           ]
         ],
       ),
+    );
+  }
+
+  static pw.Widget _buildPaymentSection(Map<String, dynamic> data) {
+    if (data['pagos'] == null || data['pagos'] is! Map) {
+      return pw.Container();
+    }
+
+    final pagos = data['pagos'];
+    final metodo = pagos['metodo_pago_display'] ?? pagos['metodo_pago'];
+
+    if (metodo == null || metodo.toString().isEmpty) {
+      return pw.Container();
+    }
+
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        // SEPARATOR: TOTALS -> PAYMENT
+        pw.SizedBox(height: kPaddingSection),
+        pw.Divider(borderStyle: pw.BorderStyle.dashed, height: kDividerHeight),
+        pw.SizedBox(height: kPaddingSection),
+        
+        pw.Text("Metodo de Pago:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        // Payment Method Row
+        _buildTotalRow(
+          metodo.toString().toUpperCase(), 
+          data['total'] ?? '', 
+          fontSize: 12
+        ),
+        
+        // Optional: Monto Recibido
+        if (pagos['monto_recibido_display'] != null && pagos['monto_recibido_display'].toString().isNotEmpty)
+          _buildTotalRow('Monto recibido', pagos['monto_recibido_display'].toString()),
+          
+        // Optional: Vuelto
+        if (pagos['vuelto_display'] != null && pagos['vuelto_display'].toString().isNotEmpty)
+          _buildTotalRow('Vuelto', pagos['vuelto_display'].toString()),
+      ],
     );
   }
 
