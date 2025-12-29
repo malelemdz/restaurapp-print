@@ -73,7 +73,7 @@ class PrintService {
     Uri url;
     if (_domain!.contains('localhost') || _domain!.startsWith('192.168.')) {
       // Local Development Mode
-      // If user typed 'localhost', assuming default XAMPP path: /restuarapp/backend/public
+      // If user typed 'localhost', assuming default XAMPP path: /restaurapp/backend/public
       String baseUrl = _domain!;
       
       // Basic cleanup
@@ -81,7 +81,7 @@ class PrintService {
       
       // If it's just 'localhost', append the known dev path
       if (baseUrl == 'localhost') {
-        url = Uri.parse('http://localhost/restuarapp/backend/public/api-servicio-impresion.php?action=get_pending');
+        url = Uri.parse('http://localhost/restaurapp/backend/public/api-servicio-impresion.php?action=get_pending');
       } else {
          // If user typed something like '192.168.1.10/restuarapp/backend/public', respect it
          url = Uri.parse('http://$baseUrl/api-servicio-impresion.php?action=get_pending'); 
@@ -209,7 +209,7 @@ class PrintService {
         baseUrl = baseUrl.replaceAll('http://', '').replaceAll('https://', '');
         
         if (baseUrl == 'localhost') {
-          url = Uri.parse('http://localhost/restuarapp/backend/public/api-servicio-impresion.php');
+          url = Uri.parse('http://localhost/restaurapp/backend/public/api-servicio-impresion.php');
         } else {
            url = Uri.parse('http://$baseUrl/api-servicio-impresion.php'); 
         }
