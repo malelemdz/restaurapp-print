@@ -69,7 +69,7 @@ class PrintService {
 
   Future<void> _poll() async {
     try {
-      final url = Uri.parse('https://$_domain/backend/public/api-servicio-impresion.php?action=get_pending');
+      final url = Uri.parse('https://$_domain/api-servicio-impresion.php?action=get_pending');
       
       final response = await http.get(url).timeout(const Duration(seconds: 10));
 
@@ -182,7 +182,7 @@ class PrintService {
 
   Future<void> _markAsCompleted(String jobId) async {
     try {
-      final url = Uri.parse('https://$_domain/backend/public/api-servicio-impresion.php');
+      final url = Uri.parse('https://$_domain/api-servicio-impresion.php');
       final response = await http.post(
         url,
         body: {
