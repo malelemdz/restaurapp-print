@@ -69,7 +69,27 @@ class PrintService {
 
   Future<void> _poll() async {
     try {
-      final url = Uri.parse('https://$_domain/api-servicio-impresion.php?action=get_pending');
+    // Construct URL with dynamic protocol and path
+    Uri url;
+    if (_domain!.contains('localhost') || _domain!.startsWith('192.168.')) {
+      // Local Development Mode
+      // If user typed 'localhost', assuming default XAMPP path: /restuarapp/backend/public
+      String baseUrl = _domain!;
+      
+      // Basic cleanup
+      baseUrl = baseUrl.replaceAll('http://', '').replaceAll('https://', '');
+      
+      // If it's just 'localhost', append the known dev path
+      if (baseUrl == 'localhost') {
+        url = Uri.parse('http://localhost/restuarapp/backend/public/api-servicio-impresion.php?action=get_pending');
+      } else {
+         // If user typed something like '192.168.1.10/restuarapp/backend/public', respect it
+         url = Uri.parse('http://$baseUrl/api-servicio-impresion.php?action=get_pending'); 
+      }
+    } else {
+      // Production Mode (Default) -> HTTPS + Root
+      url = Uri.parse('https://$_domain/api-servicio-impresion.php?action=get_pending');
+    }
       
       final response = await http.get(url).timeout(const Duration(seconds: 10));
 
@@ -182,7 +202,20 @@ class PrintService {
 
   Future<void> _markAsCompleted(String jobId) async {
     try {
-      final url = Uri.parse('https://$_domain/api-servicio-impresion.php');
+      // Construct URL with dynamic protocol and path
+      Uri url;
+      if (_domain!.contains('localhost') || _domain!.startsWith('192.168.')) {
+        String baseUrl = _domain!;
+        baseUrl = baseUrl.replaceAll('http://', '').replaceAll('https://', '');
+        
+        if (baseUrl == 'localhost') {
+          url = Uri.parse('http://localhost/restuarapp/backend/public/api-servicio-impresion.php');
+        } else {
+           url = Uri.parse('http://$baseUrl/api-servicio-impresion.php'); 
+        }
+      } else {
+        url = Uri.parse('https://$_domain/api-servicio-impresion.php');
+      }
       final response = await http.post(
         url,
         body: {
