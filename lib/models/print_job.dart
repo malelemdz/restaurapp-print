@@ -104,8 +104,13 @@ class PrintJob {
       }
       
       // E. Mapear IDs y Extras (Cocina)
-      if (sourceData['pedido_id'] != null) flatData['numero_pedido'] = sourceData['pedido_id'];
-      if (json['pedido_id'] != null) flatData['numero_pedido'] = json['pedido_id']; // ID raiz tiene prioridad
+      // E. Mapear IDs y Extras (Cocina)
+      // Prioridad: Numero Pedido (Folio) > Pedido ID (Internal)
+      if (json['numero_pedido'] != null) {
+          flatData['numero_pedido'] = json['numero_pedido'];
+      } else if (json['pedido_id'] != null) {
+          flatData['numero_pedido'] = json['pedido_id'];
+      }
 
       // Copiar cualquier otra llave directa por si acaso
       sourceData.forEach((k, v) {

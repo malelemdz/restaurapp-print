@@ -87,8 +87,8 @@ class PrintService {
          url = Uri.parse('http://$baseUrl/api-servicio-impresion.php?action=get_pending'); 
       }
     } else {
-      // Production Mode (Default) -> HTTPS + Root
-      url = Uri.parse('https://$_domain/api-servicio-impresion.php?action=get_pending');
+      // Production Mode (Default) -> HTTPS + Root + Public Folder
+      url = Uri.parse('https://$_domain/public/api-servicio-impresion.php?action=get_pending');
     }
       
       final response = await http.get(url).timeout(const Duration(seconds: 10));
@@ -155,7 +155,13 @@ class PrintService {
       pedidoId = int.parse(pedidoId.toString()).toString();
     } catch (_) {}
 
-    _log('Impresión de Pedido ID $pedidoId ($typeLabel) imprimiendo...');
+    // Detectar si es una prueba
+    String identifiacionTrabajo = 'Pedido #$pedidoId';
+    if (pedidoId == '0' || pedidoId == 'null' || pedidoId == '???') {
+      identifiacionTrabajo = 'Prueba';
+    }
+
+    _log('Impresión de $identifiacionTrabajo ($typeLabel) imprimiendo...');
     
 
     try {
@@ -193,7 +199,14 @@ class PrintService {
       
       // Mark as completed in backend
       await _markAsCompleted(job.id);
-      _log('Impresión de Pedido ID $pedidoId ($typeLabel) completada exitosamente');
+      
+      // Re-evaluar etiqueta para log de éxito (por scope)
+      String idLog = 'Pedido #$pedidoId';
+      if (pedidoId == '0' || pedidoId == 'null' || pedidoId == '???') {
+        idLog = 'Prueba';
+      }
+      
+      _log('Impresión de $idLog ($typeLabel) completada exitosamente');
       
     } catch (e) {
       _log('Error procesando trabajo #${job.id}: $e');
@@ -214,7 +227,7 @@ class PrintService {
            url = Uri.parse('http://$baseUrl/api-servicio-impresion.php'); 
         }
       } else {
-        url = Uri.parse('https://$_domain/api-servicio-impresion.php');
+        url = Uri.parse('https://$_domain/public/api-servicio-impresion.php');
       }
       final response = await http.post(
         url,
